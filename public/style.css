@@ -20,7 +20,7 @@
   --shadow-lg: 0 20px 30px -10px rgba(255, 0, 123, 0.12), 0 12px 20px -12px rgba(0, 0, 0, 0.08);
   --shadow-hover: 0 24px 38px -8px rgba(255, 0, 123, 0.18), 0 16px 24px -10px rgba(0, 0, 0, 0.06);
 
-  --font-main: 'Kaisei Opti', serif;
+  --font-main: 'Noto Sans JP', sans-serif;
   --font-english: 'Outfit', sans-serif;
   --radius-sm: 8px;
   --radius-md: 16px;
