@@ -984,3 +984,110 @@ body {
   user-select: none;
 }
 
+/* ==========================================================================
+   モバイル・レスポンシブ最適化 (Responsive Layout Adjustments)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 16px;
+  }
+  
+  .main-header {
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .header-user {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .user-email {
+    border-right: none;
+    padding-right: 0;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 600px) {
+  /* グリッドレイアウトを1列に変更して窮屈さを解消 */
+  .form-row-2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  /* 統計カードを縦並びに */
+  .stats-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  /* 履歴レコードカードのモバイル最適化 (情報とボタンを上下セパレート) */
+  .record-card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  
+  .record-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .record-actions {
+    justify-content: flex-end;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    width: 100%;
+    margin-top: 4px;
+  }
+  
+  /* ドロップダウンの余白微調整 */
+  .time-select-container select {
+    padding: 10px 12px;
+    padding-right: 32px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* ログイン画面の余白調整 */
+  .auth-card {
+    padding: 28px 20px;
+    border-radius: var(--radius-md);
+  }
+  
+  .logo-animation {
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+  
+  .app-title {
+    font-size: 1.8rem;
+  }
+  
+  .tab-btn {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+  
+  /* ダッシュボードカードの余白調整 */
+  .card {
+    padding: 20px;
+  }
+  
+  .calc-preview-box {
+    padding: 16px;
+  }
+  
+  .preview-value {
+    font-size: 1.8rem;
+  }
+}
+
+
