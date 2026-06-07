@@ -1,0 +1,18 @@
+# 依存パッケージ
+node_modules/
+
+# ローカルデータベース（ファイル永続化時の残り）
+data/
+
+# 環境変数設定ファイル
+.env
+
+# 各種ログファイル
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS系一時ファイル
+.DS_Store
+Thumbs.db

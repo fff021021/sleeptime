@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>すいみんきろく - 睡眠時間管理</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ページ全体のオーバーレイアニメーション背景 -->
+  <div class="glow-bg"></div>
+
+  <!-- トースト通知システム（アニメーション付き） -->
+  <div id="toast-container"></div>
+
+  <!-- ================= ログイン・新規登録画面 ================= -->
+  <div id="auth-section" class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo-animation">
+          <i class="fa-solid fa-moon"></i>
+        </div>
+        <h1 class="app-title">すいみん<span>きろく</span></h1>
+      </div>
+
+      <!-- ログイン / 新規登録のタブ切り替え -->
+      <div class="tab-buttons">
+        <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">ログイン</button>
+        <button id="tab-register" class="tab-btn" onclick="switchTab('register')">新規登録</button>
+      </div>
+
+      <!-- ログインフォーム -->
+      <form id="login-form" class="auth-form active">
+        <div class="input-group">
+          <label for="login-email"><i class="fa-regular fa-envelope"></i> メールアドレス</label>
+          <input type="email" id="login-email" required placeholder="example@email.com">
+        </div>
+        <div class="input-group">
+          <label for="login-password"><i class="fa-solid fa-lock"></i> パスワード</label>
+          <input type="password" id="login-password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block ripple-btn">
+          <span>ログイン</span>
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </button>
+      </form>
+
+      <!-- 新規登録フォーム -->
+      <form id="register-form" class="auth-form">
+        <div class="input-group">
+          <label for="register-email"><i class="fa-regular fa-envelope"></i> メールアドレス</label>
+          <input type="email" id="register-email" required placeholder="example@email.com">
+        </div>
+        <div class="input-group">
+          <label for="register-password"><i class="fa-solid fa-lock"></i> パスワード (6文字以上)</label>
+          <input type="password" id="register-password" required minlength="6" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block ripple-btn">
+          <span>アカウント作成</span>
+          <i class="fa-solid fa-user-plus"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= メインダッシュボード画面 ================= -->
+  <div id="app-section" class="app-container hidden">
+    <!-- ヘッダーナビゲーション -->
+    <header class="main-header">
+      <div class="header-logo">
+        <i class="fa-solid fa-moon"></i>
+        <h2>すいみん<span>きろく</span></h2>
+      </div>
+      <div class="header-user">
+        <span id="user-display-email" class="user-email"></span>
+        <button onclick="handleLogout()" class="btn btn-outline btn-sm">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>ログアウト</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <!-- 左カラム: 入力フォームと統計 -->
+      <div class="left-column">
+        <!-- 睡眠時間の入力フォーム -->
+        <section class="card input-card animated-entrance">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> 今日の睡眠を記録する</h3>
+            <p>就寝と起床の時間を5分単位で入力してください。</p>
+          </div>
+          <form id="record-form">
+            <!-- 日付設定 -->
+            <div class="form-row-2">
+              <div class="input-group">
+                <label for="sleep-date"><i class="fa-regular fa-calendar"></i> 就寝日</label>
+                <input type="date" id="sleep-date" required>
+              </div>
+              <div class="input-group">
+                <label for="wake-date"><i class="fa-regular fa-calendar"></i> 起床日</label>
+                <input type="date" id="wake-date" required>
+              </div>
+            </div>
+
+            <!-- 時間設定（5分単位ドロップダウン） -->
+            <div class="form-row-2">
+              <div class="input-group">
+                <label><i class="fa-solid fa-bed"></i> 就寝時刻</label>
+                <div class="time-select-container">
+                  <select id="sleep-hour" required></select>
+                  <span>:</span>
+                  <select id="sleep-minute" required></select>
+                </div>
+              </div>
+              <div class="input-group">
+                <label><i class="fa-solid fa-sun"></i> 起床時刻</label>
+                <div class="time-select-container">
+                  <select id="wake-hour" required></select>
+                  <span>:</span>
+                  <select id="wake-minute" required></select>
+                </div>
+              </div>
+            </div>
+
+            <!-- メモ -->
+            <div class="input-group">
+              <label for="record-memo"><i class="fa-regular fa-note-sticky"></i> メモ (任意)</label>
+              <input type="text" id="record-memo" placeholder="心地よく眠れた、途中で起きたなど" autocomplete="on" autocorrect="on" autocapitalize="sentences">
+            </div>
+
+            <!-- 計算プレビュー領域 -->
+            <div id="calc-preview" class="calc-preview-box">
+              <span class="preview-label">計算された睡眠時間</span>
+              <div class="preview-value">
+                <span id="preview-hours">0</span><small>時間</small>
+                <span id="preview-minutes">0</span><small>分</small>
+              </div>
+            </div>
+
+            <button type="submit" id="submit-record-btn" class="btn btn-primary btn-block">
+              <i class="fa-solid fa-plus"></i> <span>記録を追加する</span>
+            </button>
+          </form>
+        </section>
+
+        <!-- 簡易ダッシュボード統計 -->
+        <section class="stats-container animated-entrance" style="animation-delay: 0.1s;">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="stat-info">
+              <span class="stat-title">平均睡眠時間</span>
+              <h3 id="stat-avg-duration">0.0<small>時間</small></h3>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="stat-info">
+              <span class="stat-title">総記録数</span>
+              <h3 id="stat-total-records">0<small>回</small></h3>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- 右カラム: 履歴リスト -->
+      <div class="right-column">
+        <section class="card history-card animated-entrance" style="animation-delay: 0.2s;">
+          <div class="card-header history-header">
+            <h3><i class="fa-solid fa-list-ul"></i> 睡眠記録の履歴</h3>
+            <button onclick="loadRecords()" class="btn btn-icon-only" title="同期・更新">
+              <i id="sync-icon" class="fa-solid fa-rotate"></i>
+            </button>
+          </div>
+          
+          <!-- ローディング・状態インジケータ -->
+          <div id="loading-indicator" class="loading-state hidden">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>同期中...</p>
+          </div>
+
+          <!-- 履歴空状態 -->
+          <div id="empty-state" class="empty-state">
+            <i class="fa-solid fa-sheet-plastic"></i>
+            <p>睡眠記録がまだありません。<br>上のフォームから記録を追加してみましょう！</p>
+          </div>
+
+          <!-- 履歴リスト本体 -->
+          <div id="records-list" class="records-list">
+            <!-- JavaScriptで動的にカードを挿入 -->
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= 編集用モーダルウィンドウ ================= -->
+  <div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-to-square"></i> 睡眠記録の編集</h3>
+        <button onclick="closeEditModal()" class="btn-close">&times;</button>
+      </div>
+      <form id="edit-form">
+        <input type="hidden" id="edit-record-id">
+        
+        <div class="form-row-2">
+          <div class="input-group">
+            <label for="edit-sleep-date">就寝日</label>
+            <input type="date" id="edit-sleep-date" required>
+          </div>
+          <div class="input-group">
+            <label for="edit-wake-date">起床日</label>
+            <input type="date" id="edit-wake-date" required>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="input-group">
+            <label>就寝時刻</label>
+            <div class="time-select-container">
+              <select id="edit-sleep-hour" required></select>
+              <span>:</span>
+              <select id="edit-sleep-minute" required></select>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>起床時刻</label>
+            <div class="time-select-container">
+              <select id="edit-wake-hour" required></select>
+              <span>:</span>
+              <select id="edit-wake-minute" required></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="edit-record-memo">メモ (任意)</label>
+          <input type="text" id="edit-record-memo" autocomplete="on" autocorrect="on" autocapitalize="sentences">
+        </div>
+
+        <!-- 編集中の計算プレビュー -->
+        <div id="edit-calc-preview" class="calc-preview-box edit-preview">
+          <span class="preview-label">計算された睡眠時間</span>
+          <div class="preview-value">
+            <span id="edit-preview-hours">0</span><small>時間</small>
+            <span id="edit-preview-minutes">0</span><small>分</small>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" onclick="closeEditModal()" class="btn btn-outline">キャンセル</button>
+          <button type="submit" class="btn btn-primary">変更を保存する</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
