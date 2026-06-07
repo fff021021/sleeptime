@@ -382,10 +382,10 @@ function renderRecordsList() {
         ${record.memo ? `<div class="record-memo"><i class="fa-regular fa-comment-dots"></i> ${escapeHTML(record.memo)}</div>` : ''}
       </div>
       <div class="record-actions">
-        <button onclick="openEditModal('${record.id}')" class="action-btn action-btn-edit" title="編集">
+        <button onclick="openEditModal('${record.id || record._id}')" class="action-btn action-btn-edit" title="編集">
           <i class="fa-solid fa-pen"></i>
         </button>
-        <button onclick="handleDeleteRecord('${record.id}', this)" class="action-btn action-btn-delete" title="削除">
+        <button onclick="handleDeleteRecord('${record.id || record._id}', this)" class="action-btn action-btn-delete" title="削除">
           <i class="fa-solid fa-trash-can"></i>
         </button>
       </div>
@@ -447,8 +447,8 @@ async function handleAddRecord(e) {
   const wMin = document.getElementById('wake-minute').value;
   const memo = document.getElementById('record-memo').value;
 
-  const sleepTime = `${sDate}T${sHour}:${sMin}`;
-  const wakeTime = `${wDate}T${wHour}:${wMin}`;
+  const sleepTime = `${sDate}T${sHour}:${sMin}:00+09:00`;
+  const wakeTime = `${wDate}T${wHour}:${wMin}:00+09:00`;
 
   // 事前検証
   if (new Date(wakeTime) <= new Date(sleepTime)) {
@@ -516,7 +516,7 @@ async function handleDeleteRecord(recordId, buttonElement) {
     // アニメーション完了後にDOMから削除し、メモリと統計を更新
     cardElement.addEventListener('animationend', () => {
       cardElement.remove();
-      sleepRecords = sleepRecords.filter(r => r.id !== recordId);
+      sleepRecords = sleepRecords.filter(r => (r.id || r._id) !== recordId);
       updateDashboardStats();
       if (sleepRecords.length === 0) {
         document.getElementById('empty-state').classList.remove('hidden');
@@ -531,11 +531,11 @@ async function handleDeleteRecord(recordId, buttonElement) {
 
 // モーダルを開く
 function openEditModal(recordId) {
-  const record = sleepRecords.find(r => r.id === recordId);
+  const record = sleepRecords.find(r => (r.id || r._id) === recordId);
   if (!record) return;
 
   // フォームにデータを投入
-  document.getElementById('edit-record-id').value = record.id;
+  document.getElementById('edit-record-id').value = record.id || record._id;
   
   const sDateTime = new Date(record.sleepTime);
   const wDateTime = new Date(record.wakeTime);
@@ -583,8 +583,8 @@ async function handleUpdateRecord(e) {
   const wMin = document.getElementById('edit-wake-minute').value;
   const memo = document.getElementById('edit-record-memo').value;
 
-  const sleepTime = `${sDate}T${sHour}:${sMin}`;
-  const wakeTime = `${wDate}T${wHour}:${wMin}`;
+  const sleepTime = `${sDate}T${sHour}:${sMin}:00+09:00`;
+  const wakeTime = `${wDate}T${wHour}:${wMin}:00+09:00`;
 
   // 事前検証
   if (new Date(wakeTime) <= new Date(sleepTime)) {

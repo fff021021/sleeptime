@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-});
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
 
 // 2. 睡眠記録定義
 const SleepRecordSchema = new mongoose.Schema({
@@ -62,7 +62,7 @@ const SleepRecordSchema = new mongoose.Schema({
   updatedAt: {
     type: Date
   }
-});
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
 
 // モデルのコンパイル
 const User = mongoose.model('User', UserSchema);
