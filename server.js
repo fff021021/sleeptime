@@ -59,7 +59,7 @@ app.post('/api/auth/register', async (req, res) => {
     });
 
     // トークン生成
-    const token = jwt.sign({ userId: newUser.id || newUser._id, email: newUser.email }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: newUser._id.toString(), email: newUser.email }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({
       message: '登録が完了しました',
@@ -94,7 +94,7 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
     // トークン生成
-    const token = jwt.sign({ userId: user.id || user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id.toString(), email: user.email }, JWT_SECRET, { expiresIn: '7d' });
 
     res.json({
       message: 'ログインしました',
